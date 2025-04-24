@@ -1,8 +1,8 @@
 init:
-	python -m venv venv && \
+	python3 -m venv venv && \
 	source venv/bin/activate && \
 	pip install -r requirements.txt
 
 run:
 	source venv/bin/activate && \
-	python run.py
+	python3 run.py
