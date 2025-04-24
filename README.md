@@ -2,7 +2,6 @@
 App web para registrar servidores Linux y gestionar los servicios instalados en ellos, levantarlos, administrarlos (reiniciar/dar de baja) y monitorizarlos en tiempo real.
 
 ## Estructura
----
 Frontend: Aplicación Flutter (Web y Móvil)
 
 Backend: API Flask con PostgreSQL, JWT y Swagger
