@@ -25,6 +25,12 @@ cd backend
 ```
 
 ### B. Crear entorno virtual de Python
+Con el makefile:
+```bash
+make init
+```
+
+Manualmente:
 ```bash
 python3 -m venv venv
 source venv/bin/activate     # En Windows: venv\Scripts\activate
@@ -36,6 +42,10 @@ pip install -r requirements.txt
 ```
 
 ### D. Ejecutar el servidor Flask
+Con el makefile:
+```bash
+make run
+```
 Con python:
 ```bash
 python run.py
@@ -63,7 +73,7 @@ cd ../frontend
 ### B. Instalar Flutter SDK (si no lo tienes)
 - Ir a: https://docs.flutter.dev/get-started/install
 - Descargar el SDK según el sistema operativo.
-Flutter recomienda crear el directorio `development`:
+- Flutter recomienda crear el directorio `development`:
 ```bash
 mkdir ~/development
 cd ~/development
