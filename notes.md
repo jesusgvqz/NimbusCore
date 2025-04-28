@@ -158,4 +158,19 @@ def validar(user, pass){
 
 ### Validación de números
 - Revisar que los valores sean números del tipo necesario antes de procesarlos.
-- 
+
+
+# Revisión 1
+- Quitar el usuario, no se especifica en el proyecto, agregarlo es sobre diseño
+- Cada servidor tiene sus servicios
+  - Almacén de servidores
+  - Almacén de servicios
+- Proteger más los procesos
+  - Detallar la tabla de amenazas
+  - Alguién que no se haya autenticado, que no pueda hacer peticiones
+    - Peticiones autenticadas con token
+- Protección de almacenes
+  - Cifrado
+  - Hashing está bien
+  - Agregar algunas relacionadas con privilegios, análisis y limitaciones
+- Los flujos no son propensos al spofing, quitar validación de tokens
