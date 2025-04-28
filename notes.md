@@ -17,6 +17,10 @@
 
 ---
 
+# Uso de CAPTCHAS
+- Investigación sobre el captcha para el framework que usaremos
+
+
 # Ámbito
 - Alcance de identificadores.
   - Cualquier cosa que un programador nombra, como variables, clases, o funciones.
