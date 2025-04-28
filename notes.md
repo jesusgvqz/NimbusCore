@@ -15,6 +15,14 @@
   - Agregar algunas relacionadas con privilegios, análisis y limitaciones
 - Los flujos no son propensos al spofing, quitar validación de tokens
 
+## Explicación del profe
+- agregar entidad externa que representa un sistema que realiza las operaciones del lado de cada servidor
+- administrador -> levantar (flutter) -> servidor (paramiko)
+- agregar capa de autenticación de peticiones críticas
+  - JWT
+  - SSH
+
+
 ---
 
 # Uso de CAPTCHAS
