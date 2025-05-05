@@ -1,8 +1,20 @@
-# Python
+# Python bytecode files
 __pycache__/
 *.py[cod]
-*.sqlite3
-*.db
-.env
+
+# Virtual environments
 .venv/
 venv/
+
+# Environment variables
+.env
+
+# Local databases
+*.sqlite3
+*.db
+
+# Editor settings 
+.vscode/
+
+# Logs
+*.log
