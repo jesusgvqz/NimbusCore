@@ -10,5 +10,8 @@ class Config:
     JWT_ACCESS_TOKEN_EXPIRES = int(os.getenv("JWT_ACCESS_TOKEN_EXPIRES", 3600))
     JWT_TOKEN_LOCATION = os.getenv("JWT_TOKEN_LOCATION", "headers").split(',')
 
-    SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_URL", "postgresql://nimbuscore:n1mbus.C0r3@db:5432/nimbuscoredb")
+    SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_URL")
+    if not SQLALCHEMY_DATABASE_URI:
+        raise RuntimeError("DATABASE_URL environment variable is not set.")
+
     SQLALCHEMY_TRACK_MODIFICATIONS = False
