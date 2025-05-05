@@ -24,3 +24,11 @@ class Config:
         raise RuntimeError("DATABASE_URL is not set in environment variables.")
 
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+
+    RECAPTCHA_PUBLIC_KEY = os.getenv("RECAPTCHA_PUBLIC_KEY")
+    RECAPTCHA_PRIVATE_KEY = os.getenv("RECAPTCHA_PRIVATE_KEY")
+
+    SWAGGER = {
+    "title": "NimbusCore API",
+    "uiversion": 3
+    }
