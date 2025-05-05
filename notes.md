@@ -22,6 +22,15 @@
   - JWT
   - SSH
 
+---
+
+| Elemento     | Acción concreta                                                  |
+| ------------ | ---------------------------------------------------------------- |
+| PostgreSQL   | Contraseña segura + acceso privado por red Docker                |
+| `.env`       | Guarda `SECRET_KEY`, `JWT_SECRET_KEY`, y credenciales DB         |
+| Flask config | Cargar variables desde `.env` usando `load_dotenv()`             |
+| JWT          | Configurado con duración, clave segura y validación por rol      |
+| Rutas        | Protegidas con `@jwt_required()` y validación `identity["role"]` |
 
 ---
 
