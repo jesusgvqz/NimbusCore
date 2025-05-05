@@ -16,6 +16,17 @@ make run
 
 ---
 
+## Flask WTF
+### Instalación
+- Activar el entorno
+```bash
+source venv/bin/activate
+```
+- Instalar Flask-WTF
+```bash
+pip install -U Flask-WTF
+```
+
 
 ## Docker Sonar-Scanner
 
