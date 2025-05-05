@@ -1,14 +1,40 @@
 # NimbusCore
-App web para registrar servidores Linux y gestionar los servicios instalados en ellos, levantarlos, administrarlos (reiniciar/dar de baja) y monitorizarlos en tiempo real.
 
-## Estructura
-Frontend: Aplicación Flutter (Web y Móvil)
+App web para registrar servidores Linux y gestionar los servicios instalados en ellos: levantarlos, administrarlos (reiniciar/dar de baja) y monitorizarlos en tiempo real.
 
-Backend: API Flask con PostgreSQL, JWT y Swagger
+## Tecnologías
 
-# Instalación
+* **Frontend**: Aplicación Flutter (Web y Móvil)
+* **Backend**: API REST con Flask, PostgreSQL, JWT, Swagger (Flasgger)
+* **Contenedores**: Docker + Docker Compose
 
-## 🔄 1. Clonar el repositorio
+## Estructura del proyecto
+
+```
+NimbusCore/
+├── backend/
+│   ├── app/
+│   │   ├── api/                # Futura API para Flutter
+│   │   ├── core/               # Inicialización de extensiones
+│   │   ├── docs/               # Documentación Swagger
+│   │   ├── forms/              # Formularios WTForms para vista de prueba
+│   │   ├── models/             # Modelos SQLAlchemy
+│   │   ├── routes/             # Rutas Flask
+│   │   ├── templates/          # HTML para prueba con login
+│   │   ├── config.py           # Configuración general
+│   │   └── __init__.py         # Fábrica de la app
+│   ├── run.py                  # Entry point
+│   ├── requirements.txt        # Dependencias
+│   ├── Dockerfile              # Imagen del backend
+│   └── .env                    # Variables de entorno
+├── frontend/                   # Aplicación Flutter
+├── docker-compose.yml          # Orquestación de servicios
+```
+
+## Instalación y ejecución
+
+### 📁 1. Clonar el repositorio
+
 ```bash
 git clone https://github.com/jesusgvqz/NimbusCore.git
 cd NimbusCore
@@ -16,93 +42,92 @@ cd NimbusCore
 
 ---
 
-## 🐍 2. Configurar el backend (Flask)
+### 🚧 2. Levantar los servicios con Docker Compose
 
-### A. Ir a la carpeta del backend
 ```bash
-cd backend
-```
-
-### B. Crear entorno virtual de Python
-Con el makefile:
-```bash
-make init
+docker compose up -d --build
 ```
 
-Manualmente:
-```bash
-python3 -m venv venv
-source venv/bin/activate     # En Windows: venv\Scripts\activate
-```
+Esto iniciará los siguientes contenedores:
 
-### C. Instalar dependencias
-```bash
-pip install -r requirements.txt
-```
+* `flask_backend`: backend con Flask
+* `postgres_nimbuscore`: base de datos PostgreSQL
+* `sonarqube`: servidor de calidad de código (opcional)
 
-### D. Ejecutar el servidor Flask
-Con el makefile:
-```bash
-make run
-```
-Con python:
-```bash
-python run.py
-```
-Mediante .flaskenv:
-```bash
-flask run
-```
+### 🔧 3. Acceder a la app de prueba
 
-La API estará disponible en:
-```
-http://localhost:5000
-http://localhost:5000/apidocs (Swagger UI)
-```
+* API REST: [http://localhost:5000](http://localhost:5000)
+* Swagger UI: [http://localhost:5000/apidocs](http://localhost:5000/apidocs)
+* Login de prueba: [http://localhost:5000/login](http://localhost:5000/login)
+
+  * Usuario: `admin` / Contraseña: `admin`
 
 ---
 
-## 🎯 3. Configurar el frontend (Flutter)
+### 🌐 4. Frontend Flutter (opcional por ahora)
 
-### A. Ir a la carpeta del frontend
+La estructura ya está preparada para conectar Flutter a la API.
+
+#### A. Ir a la carpeta del frontend
+
 ```bash
-cd ../frontend
+cd frontend
 ```
 
-### B. Instalar Flutter SDK (si no lo tienes)
-- Ir a: https://docs.flutter.dev/get-started/install
-- Descargar el SDK según el sistema operativo.
-- Flutter recomienda crear el directorio `development`:
-```bash
-mkdir ~/development
-cd ~/development
-```
-```bash
-tar -xf ~/Downloads/flutter_linux_3.29.3-stable.tar.xz -C ~/development/
-```
+#### B. Verifica que tienes Flutter instalado
 
-- Agregar Flutter al PATH:
-```bash
-# En Linux/macOS (~/.bashrc o ~/.zshrc)
-echo 'export PATH="$HOME/development/flutter/bin:$PATH"' >> ~/.bash_profile
-
-# En Windows: agregar ruta a flutter\bin en variables de entorno
-```
-
-### C. Verificar instalación
 ```bash
 flutter doctor
 ```
 
-### D. Instalar extensiones en VS Code:
-- **Flutter** (by Dart Code)
-- **Dart** (by Dart Code)
-- Opcional: Flutter Stylizer, Pubspec Assist, Flutter Snippets
+#### C. Ejecutar la app Flutter
 
-### E. Ejecutar la app Flutter
 ```bash
-flutter run -d chrome    # Para compilar en web
-flutter run              # Detecta dispositivos móviles/emuladores
+flutter run -d chrome    # En web
+flutter run              # En emulador o dispositivo
 ```
 
 ---
+
+## 🔒 Variables de entorno
+
+Ejemplo de `.env` para el backend:
+
+```
+SECRET_KEY=supersecretkey
+JWT_SECRET_KEY=superjwtsecret
+JWT_ACCESS_TOKEN_EXPIRES=3600
+JWT_TOKEN_LOCATION=headers
+DATABASE_URL=postgresql://user:pass:5432/database
+```
+
+Puedes copiar desde el archivo `.env.example` si está disponible:
+
+```bash
+cp .env.example .env
+```
+
+---
+
+## 🚫 Notas
+
+* El login HTML es temporal. Todo se migrará a API REST para consumo desde Flutter.
+* El backend implementa CSRF y JWT.
+
+---
+
+## 📊 En desarrollo
+
+* [x] Login simple con WTForms
+* [x] Integración con PostgreSQL
+* [x] Documentación Swagger
+* [x] Protección con JWT
+* [x] Docker Compose para backend, DB y SonarQube
+* [ ] API REST completa para Flutter
+* [ ] Verificación de usuarios reales con base de datos
+* [ ] Autenticación con roles
+* [ ] Módulo de registro de servidores y servicios
+
+---
+
+> Proyecto realizado para la E.E. Programación Segura - 2025
