@@ -1,0 +1,18 @@
+paths:
+  /login:
+    post:
+      summary: "Iniciar sesión"
+      consumes:
+        - application/x-www-form-urlencoded
+      parameters:
+        - name: username
+          in: formData
+          type: string
+        - name: password
+          in: formData
+          type: string
+      responses:
+        200:
+          description: "Login exitoso con JWT"
+        400:
+          description: "Error de validación o captcha"

@@ -1,30 +1,30 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_jwt_extended import JWTManager
+from flask_wtf import CSRFProtect
 from flasgger import Swagger
-from dotenv import load_dotenv
-import os
+from .config import Config
+from app.models.user import db, User
 
-# Load environment variables from .env file
-load_dotenv()
 
-# Initialize extensions
+csrf = CSRFProtect()
 db = SQLAlchemy()
 jwt = JWTManager()
+swagger = Swagger()
 
 def create_app():
     app = Flask(__name__)
+    app.config.from_object(Config)
 
-    # Load config from config.py
-    app.config.from_object("config.Config")
-
-    # Initialize extensions
+    csrf.init_app(app)
     db.init_app(app)
     jwt.init_app(app)
-    Swagger(app)  # <-- enables Swagger UI at /apidocs by default
+    swagger.init_app(app)
 
-    # Register blueprints
     from .routes.auth import auth_bp
-    app.register_blueprint(auth_bp, url_prefix="/api/auth")
+    from .routes.login import login_bp
+    app.register_blueprint(auth_bp)
+    app.register_blueprint(login_bp) 
 
     return app
+    
