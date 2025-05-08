@@ -17,25 +17,80 @@
 
 ## Explicación del profe
 - agregar entidad externa que representa un sistema que realiza las operaciones del lado de cada servidor
-- administrador -> levantar (flutter) -> servidor (paramiko)
+- administrador -> levantar (flutter) -> servidor (flask)
 - agregar capa de autenticación de peticiones críticas
   - JWT
   - SSH
 
+# Seguridad en inicios de sesión
+- Limitar intentos
+
+## Políticas
+- Tienes **n** cantidad de intentos inmediatos
+- Si agotas los intentos de sebe esperar **m** cantidad de segundos
+- Mientras sigas intentando sin descanso, sigues bloqueado
+- Cada **m** cantidad de segundos se reinician los intentos
+
+### Información necesaria
+- IP del cliente
+- Conteno de intentos, durante ventana de tiempo **m**
+- No ha alcanzado el valor de **n**
+
+### Solución
+- Manejar el contador desde la base de datos
+- ip_addr = request.remote_addr
+
 ---
 
-| Elemento     | Acción concreta                                                  |
-| ------------ | ---------------------------------------------------------------- |
-| PostgreSQL   | Contraseña segura + acceso privado por red Docker                |
-| `.env`       | Guarda `SECRET_KEY`, `JWT_SECRET_KEY`, y credenciales DB         |
-| Flask config | Cargar variables desde `.env` usando `load_dotenv()`             |
-| JWT          | Configurado con duración, clave segura y validación por rol      |
-| Rutas        | Protegidas con `@jwt_required()` y validación `identity["role"]` |
+# Hashes
+
+**Recomendación**
+Usar **sha256** como mínimo.
+El hash **sha512** es una cadena más larga y tiene mayor protección ante preimagenes y colisiones.
 
 ---
+
+hash(b) = XXXXX
+
+El dominio es infinito, **b** puede tomar cualquier valor, pero el hash siempre será de un número definido de caracteres.
+
+En el caso: h(b) = 35
+
+Los posibles valores de **b** son un conjunto infinito.
+
+**Por ejemplo:**
+```python
+par(num)
+
+# retorna 0 o 1
+```
+El tamaño de hash de la función `par` es de longitud 1.
+
+## Preimagen
+Para la preimagen necesitamos un hash, siguiendo el ejempo de h(b)=35, sería 35.
+
+Son todos los valores de entrada que generan la salida que conocemos, es decir, todos posibles valores de **b** que generen 35.
+
+**Por ejemplo:**
+```python
+par(2)
+# 0
+par(222222)
+# 0
+```
+La preimagen de 0 serían todos los números pares.
+
+## Resistencia de preimagen
+**Algoritmo de hash seguro.**
+Debe ser casi imposible encontrar un elemento de la preimagen del hash.
+
+## Resistencia a colisiones
+Aunque la preimagen es infinita, es posible que no haya colisiones.
+El hash **md5** es débil ante colisiones.
+
 
 # Uso de CAPTCHAS
-- Investigación sobre el captcha para el framework que usaremos
+- reCaptcha de Google
 
 
 # Ámbito
