@@ -1,22 +1,15 @@
-# Dockerfile para backend Flask
+# backend/Dockerfile
 FROM python:3.11-slim
 
-# Variables de entorno
-ENV PYTHONDONTWRITEBYTECODE=1
-ENV PYTHONUNBUFFERED=1
-
-# Establecer directorio de trabajo
 WORKDIR /app
 
-# Copiar dependencias e instalarlas
 COPY requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copiar el resto del backend
 COPY . .
 
-# Especificar el puerto expuesto (coincidir con docker-compose)
-EXPOSE 5000
+# para producción
+# CMD ["gunicorn", "backend.wsgi:application", "--bind", "0.0.0.0:8000"]
 
-# Comando para ejecutar la app
-CMD ["python", "run.py"]
+# para desarrollo
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
