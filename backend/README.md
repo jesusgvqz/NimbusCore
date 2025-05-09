@@ -68,7 +68,7 @@ Ejecutar análisis manual:
 ```bash
 docker run --rm \
   -e SONAR_HOST_URL="http://172.17.0.1:9000" \
-  -e SONAR_TOKEN="sqp_da6bbed3337ac0b5d611a6ba5a1c150005212790" \
+  -e SONAR_TOKEN="sqp_bfb298a7f59ed6934e7819e85dc22f5e9150f4cd" \
   -v "$(pwd):/usr/src" \
   sonarsource/sonar-scanner-cli
 ```
