@@ -84,6 +84,10 @@ La preimagen de 0 serían todos los números pares.
 **Algoritmo de hash seguro.**
 Debe ser casi imposible encontrar un elemento de la preimagen del hash.
 
+## Segunda resistencia de preimagen
+Tengo un original, un hash.
+Debe ser casi imposible encontrar un binario que esté en la preimagen para usarlo como falsificación.
+
 ## Resistencia a colisiones
 Aunque la preimagen es infinita, es posible que no haya colisiones.
 El hash **md5** es débil ante colisiones.
