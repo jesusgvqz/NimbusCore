@@ -1,0 +1,48 @@
+/* Importar la fuente Inter desde Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
+/* Variables de colores */
+:root {
+  --color-primary: #382eea;
+  --color-background: #010104;
+  --color-surface: #14b393;
+  --color-accent: #dca7e6;
+  --color-text: #8c00ff;
+  --font-family: 'Inter', sans-serif;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-family);
+  background-color: var(--color-background);
+  color: var(--color-text);
+}
+
+a {
+  color: var(--color-accent);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+button {
+  background-color: var(--color-primary);
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  font-family: var(--font-family);
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+input, select, textarea {
+  font-family: var(--font-family);
+  padding: 8px;
+  border: 1px solid var(--color-surface);
+  border-radius: 4px;
+  background-color: #ffffff08;
+  color: white;
+}
