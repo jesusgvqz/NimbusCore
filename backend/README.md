@@ -15,7 +15,7 @@ docker compose up -d --build
 Esto:
 
 * Construye las imágenes (si hay cambios).
-* Levanta los contenedores de Flask, PostgreSQL y SonarQube.
+* Levanta los contenedores de Django, PostgreSQL y SonarQube.
 
 ---
 
@@ -24,13 +24,13 @@ Esto:
 Para ver logs en tiempo real:
 
 ```bash
-docker compose logs -f flask_backend
+docker compose logs -f web
 ```
 
 O por contenedor:
 
 ```bash
-docker logs flask_backend
+docker logs web
 # o
 docker logs postgres_nimbuscore
 ```
@@ -40,15 +40,13 @@ docker logs postgres_nimbuscore
 ## 🧪 3. Ejecutar Comandos en Flask (desde Docker)
 
 ```bash
-docker exec -it flask_backend bash
+docker exec -it django_nimbuscore bash
 ```
 
 Ejemplos desde dentro del contenedor:
 
 ```bash
-python run.py
-flask shell
-flask db upgrade
+python manage.py runserver
 ```
 
 ---
@@ -74,97 +72,3 @@ docker run --rm \
 ```
 
 ---
-
-## 🧹 Archivos Eliminables
-
-| Archivo/Directorio   | ¿Borrar?   | Justificación                        |
-| -------------------- | ---------- | ------------------------------------ |
-| `venv/`              | ✅ Sí       | Docker reemplaza el entorno local    |
-| `.flaskenv`          | ✅ Sí       | Variables ahora están en `.env`      |
-| `makefile`           | ✅ Opcional | Docker cubre todo el flujo           |
-| `.env`               | ❌ No       | Necesario para credenciales          |
-| `DockerFile`         | ❌ No       | Requerido para backend Flask         |
-| `docker-compose.yml` | ❌ No       | Esencial para levantar todo el stack |
-
----
-
-## 💡 Recomendaciones
-
-* Mantener servicios en ejecución mientras desarrollamos.
-* Configurar usuarios desde SonarQube o gestionando accesos en PostgreSQL.
-* Documentar endpoints y usar `.env` para variables sensibles.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
------------
-
-
-# Flask API
-
-## Instalación
-- Crear el venv e instalar los requirements
-```bash
-make init
-```
----
-
-## Ejecución
-
-- Ejecutar el servidor
-```bash
-make run
-```
-
----
-
-## Flask WTF
-### Instalación
-- Activar el entorno
-```bash
-source venv/bin/activate
-```
-- Instalar Flask-WTF
-```bash
-pip install -U Flask-WTF
-```
-
-
-## Docker Sonar-Scanner
-
-> [!CAUTION]
-> Si creamos contenedores, los datos que se generan por defecto, se pierden una vez se da de baja el contenedor.
-
-
-Escaneo momentáneo, no guarda nada:
-```bash
-docker run --rm \
-  -e SONAR_HOST_URL="http://172.17.0.1:9000" \
-  -e SONAR_TOKEN="sqp_17499df2008fd1d84c5c570e77e422607b422e90" \
-  -v "$(pwd):/usr/src" \
-  sonarsource/sonar-scanner-cli
-```
-
-- Se necesita un directorio del lado del host, en el sistema de archivos, y otro del lado del contenedor.
-
-```bash
-docker run --rm --name sonar -p 9000:9000 \
--v /tmp/sonarqube/datos:/opt/sonarqube/data \
--v /tmp/sonarqube/logs:/opt/sonarqube/logs \
--v /tmp/sonarqube/extensiones:/opt/sonarqube/extensions
-```
