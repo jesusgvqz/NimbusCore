@@ -92,6 +92,31 @@ Debe ser casi imposible encontrar un binario que esté en la preimagen para usar
 Aunque la preimagen es infinita, es posible que no haya colisiones.
 El hash **md5** es débil ante colisiones.
 
+# Sesiones y Cookies
+
+## Manejo seguro de sesiones web
+- Las sesiones sirven para que el usuario tenga la ilusión de que la comunicación con el sistema web es contínua.
+- HTTP e sun stateless protocol, no recuerda quiénes son los clientes ni qué han hecho en el sirio, necesitas un mecanismo para recordar peticiones anteriores.
+- Las cookies con ese mecanismo para recordar lo que un usuario ha hehco en el sistema en peticiones anteriores.
+
+# Sandbox con Docker
+- **Sandbox** 
+- Ambiente de ejecución limitado, si se vulnera la aplicación dentro del sandbox, esto no afecta a las demás aplicacions del sistema.
+- Ayuda a mitigar la post-explotación, sobre todo a escalar privilegios.
+- **Contenedores** 
+- No virtualizan el kernel (todo lo central de un OS lo hace el kernel, procesos, drivers, etc).
+
+- **Dependencias**
+- Todo lo que necesitamos para que el sistema funcione.
+
+- **Reproducibilidad**
+- Buena documentación.
+- Despliegue sencillo y con configuraciones predefinidas, no hechas a mano.
+
+- **Escalabilidad**
+- Software para sincronización de archivos.
+- Balanceo de carga.
+- Se complica mientras más grande sea.
 
 # Uso de CAPTCHAS
 - reCaptcha de Google
