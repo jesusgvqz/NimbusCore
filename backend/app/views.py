@@ -1,9 +1,23 @@
+# IMPORTS
+## DJANGO
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
-from .forms import LoginForm
 
-############################################
+## FORMS
+from backend.app.forms import LoginForm
+from backend.app.forms import ServerForm
+from backend.app.forms import ServiceForm
 
+## CIPHERS
+from backend.app.hashes import *
+
+## MODELS
+from backend.app.models import *
+
+
+# VIEWS
+
+## LOGIN
 def login_view(request):
-    form = LoginForm()
-    return render(request, "login.html", {"form": form})
+    loginform = LoginForm()
+    return render(request, "login.html", {"form": loginform})
