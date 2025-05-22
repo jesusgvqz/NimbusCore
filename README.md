@@ -33,7 +33,7 @@ cd NimbusCore
 ### 🚧 2. Levantar los servicios con Docker Compose
 
 ```bash
-docker compose up -d --build
+sudo docker-compose up -d --build
 ```
 
 Esto iniciará los siguientes contenedores:
