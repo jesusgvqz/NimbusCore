@@ -21,3 +21,4 @@ from backend.app.models import *
 def login_view(request):
     loginform = LoginForm()
     return render(request, "login.html", {"form": loginform})
+    return render(request, 'dashboard.html')   
