@@ -9,4 +9,14 @@
     {{ form.as_p }}
     <button type="submit">Iniciar sesión</button>
   </form>
+  
+{% comment %} ERRORS {% endcomment %}
+  {% if errores %}
+  <ul class="errorlist">
+    {% for error in errores %}
+      <li>{{ error }}</li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+
 {% endblock %}
