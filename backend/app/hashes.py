@@ -1,5 +1,6 @@
 import os
 import hashlib
+import base64
 
 def salt_gen():
     """Genera un salt aleatorio de 16 bytes"""
@@ -18,3 +19,11 @@ def password_auth(password, hash_almacenado, salt_almacenado):
     hasher = hashlib.sha512()
     hasher.update(password_combined)
     return hash_almacenado == hasher.hexdigest()
+
+def binary_to_base64(binario):
+    """Convierte datos binarios a texto Base64"""
+    return base64.b64encode(binario).decode('utf-8')
+
+def base64_to_binary(texto64):
+    """Convierte texto Base64 a binario"""
+    return base64.b64decode(texto64)
