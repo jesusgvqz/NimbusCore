@@ -146,6 +146,7 @@ SESSION_COOKIE_SAMESITE = 'Strict'  # Evita que se usen en peticiones cross-site
 CSRF_COOKIE_SECURE = True
 CSRF_COOKIE_HTTPONLY = True  # Evita que JS pueda leer la cookie
 CSRF_COOKIE_SAMESITE = 'Strict'
+CSRF_TRUSTED_ORIGINS = ['http://172.17.0.1']
 
 # ReCAPTCHA Keys
 RECAPTCHA_PUBLIC_KEY = env("RECAPTCHA_PUBLIC_KEY")
