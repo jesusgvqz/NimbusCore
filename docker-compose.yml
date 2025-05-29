@@ -42,9 +42,12 @@ services:
     container_name: nginx_nimbuscore
     ports:
       - "80:80"
+      - 443:443
     volumes:
       - ./config/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
       - static_volume:/static
+      - ./config/conf.d:/etc/nginx/conf.d #aquí va el archivo local.conf
+      - ./config/certs:/certs  # directorio del key y cert
     depends_on:
       - web
 
