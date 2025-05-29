@@ -32,7 +32,7 @@ SECRET_KEY = env("SECRET_KEY")
 DEBUG = env.bool("DEBUG")
 
 ALLOWED_HOSTS = env.list("ALLOWED_HOSTS")
-CSRF_TRUSTED_ORIGINS = ['http:nimbuscore']
+CSRF_TRUSTED_ORIGINS = ['http://nimbuscore']
 
 
 # Application definition
