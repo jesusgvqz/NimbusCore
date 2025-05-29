@@ -50,6 +50,8 @@ services:
       - ./config/certs:/certs  # directorio del key y cert
     depends_on:
       - web
+    networks:
+      - nimbuscorenet
 
 volumes:
   postgres_data:
