@@ -37,8 +37,20 @@ services:
     networks:
       - nimbuscorenet
 
+  nginx:
+    image: nginx:latest
+    container_name: nginx_nimbuscore
+    ports:
+      - "80:80"
+    volumes:
+      - ./config/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+      - static_volume:/static
+    depends_on:
+      - web
+
 volumes:
   postgres_data:
+  static_volume:
 
 networks:
   nimbuscorenet:
