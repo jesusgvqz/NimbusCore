@@ -37,7 +37,7 @@ docker logs postgres_nimbuscore
 
 ---
 
-## 🧪 3. Ejecutar Comandos en Flask (desde Docker)
+## 🧪 3. Ejecutar Comandos desde Docker
 
 ```bash
 docker exec -it django_nimbuscore bash
