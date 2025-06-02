@@ -17,12 +17,12 @@ class ContadorIntentos(models.Model):
     def __str__(self):
         return f"{self.ip} - {self.contador} intentos"
 
-# OTP - propuesta
-# class OTPTemp(models.Model):
-#     username = models.CharField(max_length=50)
-#     otp = models.CharField(max_length=6)
-#     created_at = models.DateTimeField(auto_now_add=True)
-#     used = models.BooleanField(default=False)
-
-#     def is_valid(self):
-#         return (not self.used) and (datetime.now() - self.created_at) < timedelta(minutes=3)
+#OTP 
+class OTPTemp(models.Model):
+    username = models.CharField(max_length=50)
+    otp = models.CharField(max_length=6)
+    created_at = models.DateTimeField(auto_now_add=True)
+    used = models.BooleanField(default=False)
+    
+    def is_valid(self):
+        return (not self.used) and (datetime.now() - self.created_at) < timedelta(minutes=3)

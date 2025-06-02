@@ -1,4 +1,6 @@
 # IMPORTS
+import requests
+import environ
 ## DJANGO
 from django import forms
 
@@ -48,20 +50,22 @@ class LoginForm(forms.Form):
         if not password_auth(cleaned_password, user.password, salt):
             raise forms.ValidationError('Usuario o contraseña incorrectos.')
 
-        # OTP - propuesta
-        # import requests
-        # otp = str(random.randint(100000, 999999))
-        # OTPTemp.objects.create(username=user.username, otp=otp)
-        # telegramtoken=, chatid=, etc
-        # def send_otp_telegram(username, otp):
-        #     if not chat_id:
-        #         return
-        #     mensaje = f"Tu código OTP para NimbusCore es: {otp}"
-        #     url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage"
-        #     requests.post(url, data={"chat_id": chat_id, "text": mensaje})
+        # OTP 
+        
+        otp = str(random.randint(100000, 999999))
+        CHAT_ID = '-1002568646962'
+        TELEGRAM_TOKEN= '7974123495:AAFOPbGrJoEpyIxoZxcIdp_PV4K83oTelT8'
+        OTPTemp.objects.create(username=user.username, otp=otp)
+        #telegramtoken=, chatid=, etc
+        def send_otp_telegram(username, otp):
+            if not chat_id:
+                return
+            mensaje = f"Tu código OTP para NimbusCore es: {otp}"
+            url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage"
+            requests.post(url, data={"CHAT_ID": CHAT_ID, "text": mensaje})
 
         # # Envía por Telegram
-        # send_otp_telegram(user.username, otp)
+        send_otp_telegram(user.username, otp)
 
         self.user = user
         return cleaned_data

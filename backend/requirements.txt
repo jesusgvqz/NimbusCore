@@ -8,3 +8,4 @@ django-two-factor-auth
 psycopg2-binary
 django-axes
 django-recaptcha
+requests

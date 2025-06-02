@@ -1,5 +1,6 @@
 # IMPORTS
 ## GENERAL
+import requests
 from datetime import timezone
 ## DJANGO
 from django.conf import settings
@@ -11,6 +12,7 @@ from django.utils.timezone import now
 from .forms import LoginForm
 from .forms import ServerForm
 from .forms import ServiceForm
+from .forms import OTPForm
 
 ## CIPHERS
 from .hashes import password_auth, base64_to_binary
@@ -55,6 +57,33 @@ def tienes_intentos_login(request):
     registro.save()
     return False
 
+##  OTP 
+def otp_view(request):
+    if request.method == 'POST':
+        otpform = OTPForm(request.POST)
+        if otpform.is_valid():
+            otp_ingresado = otpform.cleaned_data['otp']
+            username = request.session.get('otp_user')
+            if not username:
+                return redirect('/login')
+
+            try:
+                otp_obj = OTPTemp.objects.get(username=username, otp=otp_ingresado, used=False)
+                if otp_obj.is_valid():
+                    otp_obj.used = True
+                    otp_obj.save()
+                    request.session['loggeado'] = True
+                    request.session['usuario'] = username
+                    return redirect('/dashboard')
+            except OTPTemp.DoesNotExist:
+                pass
+
+            otpform.add_error(None, 'Código OTP inválido o expirado')
+    else:
+        otpform = OTPForm()
+
+    return render(request, 'otp.html', {'form': otpform})
+
 # VIEWS
 
 ## LOGIN
@@ -87,32 +116,6 @@ def logout_view(request):
     request.session.flush()
     return redirect('/login')
 
-## OTP - propuesta
-# def otp_view(request):
-#     if request.method == 'POST':
-#         otpform = OTPForm(request.POST)
-#         if otpform.is_valid():
-#             otp_ingresado = otpform.cleaned_data['otp']
-#             username = request.session.get('otp_user')
-#             if not username:
-#                 return redirect('/login')
-
-#             try:
-#                 otp_obj = OTPTemp.objects.get(username=username, otp=otp_ingresado, used=False)
-#                 if otp_obj.is_valid():
-#                     otp_obj.used = True
-#                     otp_obj.save()
-#                     request.session['loggeado'] = True
-#                     request.session['usuario'] = username
-#                     return redirect('/dashboard')
-#             except OTPTemp.DoesNotExist:
-#                 pass
-
-#             otpform.add_error(None, 'Código OTP inválido o expirado')
-#     else:
-#         otpform = OTPForm()
-
-#     return render(request, 'otp.html', {'form': otpform})
 
 
 ## DASHBOARD

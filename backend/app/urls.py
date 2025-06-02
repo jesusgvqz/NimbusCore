@@ -9,4 +9,5 @@ urlpatterns = [
     path('opcion2/', views.dashboard_view, name='opcion2'),
     path('opcion3/', views.dashboard_view, name='opcion3'),
     path('opcion4/', views.dashboard_view, name='opcion4'),
+    path('otp/', views.otp_view, name='otp'),
 ]
