@@ -4,12 +4,23 @@
 {% block title %}NimbusCore - Dashboard{% endblock %}
 
 {% block content %}
+<h2 class="mb-4 text-center">Panel de Control</h2>
+<div class="row row-cols-1 row-cols-md-2 g-3">
+  <div class="col">
+    <a href="{% url 'opcion1' %}" class="btn btn-outline-primary w-100">Levantar servidor</a>
+  </div>
+  <div class="col">
+    <a href="{% url 'opcion2' %}" class="btn btn-outline-secondary w-100">Reiniciar servidor</a>
+  </div>
+  <div class="col">
+    <a href="{% url 'opcion3' %}" class="btn btn-outline-success w-100">Monitorear servidor</a>
+  </div>
+  <div class="col">
+    <a href="{% url 'opcion4' %}" class="btn btn-outline-danger w-100">Eliminar servidor</a>
+  </div>
+</div>
 
-    <div class="menu-container">
-        <a href="{% url 'opcion1' %}" class="menu-option">Levantar servidor</a>
-        <a href="{% url 'opcion2' %}" class="menu-option">Reiniciar Servidor</a>
-        <a href="{% url 'opcion3' %}" class="menu-option">Monitorear Servidor</a>
-        <a href="{% url 'opcion4' %}" class="menu-option">ELiminar Servidor</a>
-    </div>
-
+<div class="text-end mb-3 mt-3">
+  <a href="{% url 'logout' %}" class="btn btn-outline-danger">Cerrar sesión</a>
+</div>
 {% endblock %}
