@@ -2,7 +2,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
 
 /* Variables de colores */
-:root {
+/* :root {
   --color-primary: #382eea;
   --color-background: #010104;
   --color-surface: #14b393;
@@ -45,4 +45,4 @@ input, select, textarea {
   border-radius: 4px;
   background-color: #ffffff08;
   color: white;
-}
+} */
