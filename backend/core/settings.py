@@ -153,3 +153,8 @@ CSRF_COOKIE_SAMESITE = 'Strict'
 RECAPTCHA_PUBLIC_KEY = env("RECAPTCHA_PUBLIC_KEY")
 RECAPTCHA_PRIVATE_KEY = env("RECAPTCHA_PRIVATE_KEY")
 RECAPTCHA_REQUIRED_SCORE = 0.85
+
+# Número máximo de intentos antes del bloqueo temporal
+NUMERO_INTENTOS = 3
+# Tiempo en segundos que debe esperar el usuario tras alcanzar el límite
+SEGUNDOS_INTENTO = 10
