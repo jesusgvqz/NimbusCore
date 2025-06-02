@@ -1,17 +1,15 @@
+{% extends "base.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Menú Principal</title>
-    <link rel="stylesheet" href="{% static 'style.css' %}">
-</head>
-<body>
+
+{% block title %}NimbusCore - Dashboard{% endblock %}
+
+{% block content %}
+
     <div class="menu-container">
         <a href="{% url 'opcion1' %}" class="menu-option">Levantar servidor</a>
         <a href="{% url 'opcion2' %}" class="menu-option">Reiniciar Servidor</a>
         <a href="{% url 'opcion3' %}" class="menu-option">Monitorear Servidor</a>
         <a href="{% url 'opcion4' %}" class="menu-option">ELiminar Servidor</a>
     </div>
-</body>
-</html>
+
+{% endblock %}
