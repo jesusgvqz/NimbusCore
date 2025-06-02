@@ -57,8 +57,39 @@ def tienes_intentos_login(request):
     registro.save()
     return False
 
+# VIEWS
+
+## LOGIN
+def login_view(request):
+    template = 'login.html'
+
+    if request.method == 'POST':
+        if not tienes_intentos_login(request):
+            errores = [f'Debes esperar {settings.SEGUNDOS_INTENTO} segundos antes de volver a intentar']
+            return render(request, template, {'errores': errores})
+
+        loginform = LoginForm(request.POST)
+        if loginform.is_valid():
+            user = loginform.user
+            request.session['otp_user'] = user.username
+            return redirect('/otp')
+
+
+    else:
+        loginform = LoginForm()
+
+    return render(request, template, {"form": loginform})
+
+## LOGOUT
+def logout_view(request):
+    request.session['loggeado'] = False
+    request.session.flush()
+    return redirect('/login')
+
 ##  OTP 
 def otp_view(request):
+    template = 'otp.html'
+
     if request.method == 'POST':
         otpform = OTPForm(request.POST)
         if otpform.is_valid():
@@ -82,41 +113,7 @@ def otp_view(request):
     else:
         otpform = OTPForm()
 
-    return render(request, 'otp.html', {'form': otpform})
-
-# VIEWS
-
-## LOGIN
-def login_view(request):
-    template = 'login.html'
-
-    if request.method == 'POST':
-        if not tienes_intentos_login(request):
-            errores = [f'Debes esperar {settings.SEGUNDOS_INTENTO} segundos antes de volver a intentar']
-            return render(request, template, {'errores': errores})
-
-        loginform = LoginForm(request.POST)
-        if loginform.is_valid():
-            user = loginform.user
-            request.session['loggeado'] = True
-            request.session['usuario'] = user.username
-            return redirect('/dashboard')
-            # OTP - propuesta
-            # request.session['otp_user'] = user.username
-            # return redirect('/otp/')
-
-    else:
-        loginform = LoginForm()
-
-    return render(request, template, {"form": loginform})
-
-## LOGOUT
-def logout_view(request):
-    request.session['loggeado'] = False
-    request.session.flush()
-    return redirect('/login')
-
-
+    return render(request, template, {'form': otpform})
 
 ## DASHBOARD
 def dashboard_view(request):

@@ -1,5 +1,7 @@
 from django.db import models
-from datetime import datetime, timedelta
+from datetime import timedelta
+from django.utils.timezone import now
+
 
 # Create your models here.
 
@@ -25,4 +27,5 @@ class OTPTemp(models.Model):
     used = models.BooleanField(default=False)
     
     def is_valid(self):
-        return (not self.used) and (datetime.now() - self.created_at) < timedelta(minutes=3)
+        return (not self.used) and (now() - self.created_at) < timedelta(minutes=3)
+
