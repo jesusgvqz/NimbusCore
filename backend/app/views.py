@@ -19,7 +19,7 @@ from .hashes import password_auth, base64_to_binary
 
 ## MODELS
 from .models import ContadorIntentos
-
+from .models import OTPTemp
 
 # FUNCTIONS
 
@@ -120,3 +120,4 @@ def dashboard_view(request):
     if not request.session.get('loggeado'):
         return redirect('/login')
     return render(request, 'dashboard.html')
+
