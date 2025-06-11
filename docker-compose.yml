@@ -6,9 +6,9 @@ services:
     container_name: postgres_nimbuscore
     restart: always
     environment:
-      POSTGRES_DB: nimbuscoredb
-      POSTGRES_USER: nimbuscore
-      POSTGRES_PASSWORD: n1mbus.C0r3
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
@@ -17,12 +17,12 @@ services:
   web:
     build: ./backend
     container_name: django_nimbuscore
-    command: bash -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    command: bash -c "python manage.py migrate && python manage.py runserver 0.0.0.0:${BPORT}"
     volumes:
       - ./backend:/app
       - static_volume:/app/staticfiles
     ports:
-      - "8000:8000"
+      - "${BPORT}:${BPORT}"
     depends_on:
       - db
     env_file:
@@ -34,7 +34,7 @@ services:
     image: sonarqube:lts
     container_name: sonarqube
     ports:
-      - "9000:9000"
+      - "${SONARQUBE_PORT}:${SONARQUBE_PORT}"
     networks:
       - nimbuscorenet
 
@@ -42,8 +42,8 @@ services:
     image: nginx:latest
     container_name: nginx_nimbuscore
     ports:
-      - "80:80"
-      - 443:443
+      - "${NGINX_HTTP_PORT}:${NGINX_HTTP_PORT}"
+      - "${NGINX_HTTPS_PORT}:${NGINX_HTTPS_PORT}"
     volumes:
       - ./config/nginx/nginx.conf:/etc/nginx/nginx.conf:ro 
       - static_volume:/static
