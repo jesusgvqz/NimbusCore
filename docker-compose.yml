@@ -13,6 +13,8 @@ services:
       - postgres_data:/var/lib/postgresql/data
     networks:
       - nimbuscorenet
+    cpus: "0.5"
+    mem_limit: 512m
 
   web:
     build: ./backend
@@ -29,6 +31,8 @@ services:
       - ./backend/.env
     networks:
       - nimbuscorenet
+    cpus: 1
+    mem_limit: 800m
 
   sonarqube:
     image: sonarqube:lts
@@ -37,6 +41,8 @@ services:
       - "${SONARQUBE_PORT}:${SONARQUBE_PORT}"
     networks:
       - nimbuscorenet
+    cpus: 2
+    mem_limit: 2048m
 
   nginx:
     image: nginx:latest
@@ -53,6 +59,8 @@ services:
       - web
     networks:
       - nimbuscorenet
+    cpus: 0.5
+    mem_limit: 512m
 
 volumes:
   postgres_data:
