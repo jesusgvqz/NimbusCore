@@ -6,6 +6,15 @@ if [ ! -f .env.docker.enc ]; then
     exit 1
 fi
 
+#Decrytp.env.enc file
+ENC_FILE="backend/.env.enc"
+DEC_FILE="backend/.env"
+openssl enc -d -aes-256-cbc -salt -in "$ENC_FILE" -out "$DEC_FILE"
+if [ $? -ne 0 ]; then
+    echo "Error: Failed to decrypt $ENC_FILE"
+    exit 1
+fi
+
 # Decrypt.env.docker file
 ENC_FILE=.env.docker.enc
 DEC_FILE=.env.docker
@@ -38,3 +47,5 @@ done < .env.docker
 docker compose up -d
 
 rm .env.docker
+
+rm "backend/.env"
