@@ -10,6 +10,12 @@ COPY . .
 
 RUN chmod +x app/run.sh
 
+RUN useradd nimbuscore -s /bin/bash
+
+RUN chown -R nimbuscore:nimbuscore /app
+
+USER nimbuscore
+
 CMD ["./run.sh"]
 
 # para producción
