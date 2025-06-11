@@ -4,6 +4,9 @@ Plataforma web segura para administrar servicios de un conjunto de servidores Li
 El sistema permite registrar servidores, levantar servicios, administrarlos y monitorizarlos en tiempo real.  
 Todo el desarrollo se realiza con **Django + PostgreSQL**, y se despliega en contenedores Docker.
 
+## Diagrama Nivel 1
+![Diagrama Nivel 1-NIMBUSCORE](diagramaN1-NIMBUSCORE.jpeg)
+
 ## 🧱 Estructura general
 
 ```
@@ -64,7 +67,6 @@ cp .env.example .env
 
 ## 🚫 Notas
 
-* El login HTML es temporal. Todo se migrará a API REST para consumo desde Flutter.
 * El backend implementa CSRF y JWT.
 
 ---
