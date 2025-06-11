@@ -9,3 +9,4 @@ psycopg2-binary
 django-axes
 django-recaptcha
 requests
+paramiko>=3.0.0
