@@ -1,5 +1,6 @@
 # IMPORTS
 ## GENERAL
+from math import e
 import requests
 from datetime import timezone
 ## DJANGO
@@ -10,16 +11,20 @@ from django.utils.timezone import now
 
 ## FORMS
 from .forms import LoginForm
-from .forms import ServerForm
+from .forms import ServidorForm
 from .forms import ServiceForm
 from .forms import OTPForm
+from django import forms
 
+## PARAMIKO
+import paramiko
 ## CIPHERS
 from .hashes import password_auth, base64_to_binary
 
 ## MODELS
 from .models import ContadorIntentos
 from .models import OTPTemp
+from .models import Servidor
 
 # FUNCTIONS
 
@@ -120,4 +125,47 @@ def dashboard_view(request):
     if not request.session.get('loggeado'):
         return redirect('/login')
     return render(request, 'dashboard.html')
+
+
+## AddServer
+def agregarServidor(request):
+    messageSuccess = None
+    if request.method == 'POST':
+        form = ServidorForm(request.POST)
+        if form.is_valid():
+            cd = form.cleaned_data
+            #Extraer datos del formulario
+            nombre=cd['nombre']
+            ip=cd['ip']
+            puerto=cd['puerto']
+            usuario=cd['usuario']
+            password = cd['password']
+            
+            #Probar conexion con paramiko
+            ssh = paramiko.SSHClient()
+            ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+            try:
+                ssh.connect(ip, puerto, usuario, password=password ,timeout=30)
+                # Si se conecta guarda la BD
+                servidor = Servidor(
+                    nombre=nombre,
+                    ip=ip,
+                    puerto=puerto,
+                    usuario=usuario
+                )
+                servidor.save()
+                ssh.close()
+                messageSuccess = "Servidor agregado correctamente."
+                form = ServidorForm()
+                # return redirect('/dashboard')
+            except Exception as e:
+               # print(f"Error detallado de conexión SSH: {e}")
+                form.add_error(None, f"Error al conectar al servidor: {str(e)}")
+    else:
+        form = ServidorForm()
+            
+    return render(request, 'addServ.html', {
+    'form': form,
+    'messageSuccess': messageSuccess
+})
 

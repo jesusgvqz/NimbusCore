@@ -29,3 +29,12 @@ class OTPTemp(models.Model):
     def is_valid(self):
         return (not self.used) and (now() - self.created_at) < timedelta(minutes=3)
 
+#Servidor 
+class Servidor(models.Model):
+    nombre = models.CharField(max_length=100)
+    ip = models.GenericIPAddressField()
+    puerto = models.PositiveIntegerField(default=22)
+    usuario = models.CharField(max_length=100)
+    
+    def __str__(self):
+        return f"{self.nombre} ({self.ip}:{self.puerto})"

@@ -44,6 +44,8 @@ while IFS= read -r line || [ -n "$line" ]; do
     fi
 done < .env.docker
 
+docker compose build --no-cache
+
 docker compose up -d
 
 rm .env.docker

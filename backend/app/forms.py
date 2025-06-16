@@ -10,7 +10,7 @@ from django_recaptcha.fields import ReCaptchaField
 from django_recaptcha.widgets import ReCaptchaV2Checkbox
 
 ## MODELS
-from .models import Usuario, OTPTemp
+from .models import Usuario, OTPTemp, Servidor
 
 ## CIPHERS
 from .hashes import password_auth, base64_to_binary
@@ -88,8 +88,17 @@ class OTPForm(forms.Form):
     )
 
 ## SERVER
-class ServerForm(forms.Form):
-    servername = forms.CharField(label='Servidor')
+class ServidorForm(forms.ModelForm):
+    password = forms.CharField(widget=forms.PasswordInput(), required=True)
+    
+    class Meta:
+        model = Servidor
+        fields = ['nombre', 'ip', 'puerto', 'usuario',]
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for campo in self.fields.values():
+            campo.widget.attrs.update({'class': 'form-control'})
 
 ## SERVICE
 class ServiceForm(forms.Form):
