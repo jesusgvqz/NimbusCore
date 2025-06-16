@@ -16,6 +16,9 @@ from .forms import ServiceForm
 from .forms import OTPForm
 from django import forms
 
+## SSH
+from .ssh_utils import setup_ssh_key
+
 ## PARAMIKO
 import paramiko
 ## CIPHERS
@@ -154,13 +157,16 @@ def agregarServidor(request):
                     usuario=usuario
                 )
                 servidor.save()
-                ssh.close()
+
+                setup_ssh_key(ip, puerto, usuario, password)
                 messageSuccess = "Servidor agregado correctamente."
                 form = ServidorForm()
                 # return redirect('/dashboard')
             except Exception as e:
                # print(f"Error detallado de conexión SSH: {e}")
                 form.add_error(None, f"Error al conectar al servidor: {str(e)}")
+            finally:
+                ssh.close()
     else:
         form = ServidorForm()
             

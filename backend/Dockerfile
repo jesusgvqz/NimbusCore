@@ -16,7 +16,11 @@ COPY . .
 
 RUN chmod +x app/run.sh
 
-RUN useradd nimbuscore -s /bin/bash
+RUN useradd -m -s /bin/bash nimbuscore
+
+RUN mkdir -p /home/nimbuscore/.ssh && \
+    chown -R nimbuscore:nimbuscore /home/nimbuscore/.ssh && \
+    chmod 700 /home/nimbuscore/.ssh
 
 RUN chown -R nimbuscore:nimbuscore /app
 
