@@ -128,9 +128,9 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
-# STATICFILES_DIRS = [BASE_DIR / 'app' / 'static']
+STATICFILES_DIRS = [BASE_DIR / 'app' / 'static']
 
 
 # Default primary key field type
@@ -140,6 +140,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # COOKIES & SESSIONS
 SESSION_COOKIE_AGE = 3600  # 1 hora (en segundos)
+LOGIN_URL = '/login/'
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
 SESSION_COOKIE_SECURE = True  # Solo enviar cookies de sesión por HTTPS (recomendado en producción)

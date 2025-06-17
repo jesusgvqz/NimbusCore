@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Monitorización de Servicios{% endblock %}
+
+{% block content %}
+<h2 class="mb-4 text-center">Monitorización de Servicios</h2>
+
+<div id="panel-servicios" class="container">
+  <p>Cargando estados...</p>
+</div>
+
+<div class="text-end mb-3 mt-3">
+  <a href="{% url 'dashboard' %}" class="btn btn-outline-primary">Regresar al Dashboard</a>
+</div>
+
+<script src="{% static 'js/estado_servicios.js' %}"></script>
+{% endblock %}

@@ -101,6 +101,8 @@ class ServidorForm(forms.ModelForm):
             campo.widget.attrs.update({'class': 'form-control'})
 
 ## SERVICE
-class ServiceForm(forms.Form):
-    servicename = forms.CharField(label='Service')
+class ServicioForm(forms.Form):
+    servidor = forms.ModelChoiceField(queryset=Servidor.objects.all(), label="Servidor")
+    servicio = forms.CharField(label="Nombre del servicio", max_length=100)
+    
 

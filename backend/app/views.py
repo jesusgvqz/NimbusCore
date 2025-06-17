@@ -3,6 +3,7 @@
 from math import e
 import requests
 from datetime import timezone
+from django.http import JsonResponse
 ## DJANGO
 from django.conf import settings
 from django.shortcuts import render, redirect
@@ -12,9 +13,9 @@ from django.utils.timezone import now
 ## FORMS
 from .forms import LoginForm
 from .forms import ServidorForm
-from .forms import ServiceForm
 from .forms import OTPForm
 from django import forms
+from .forms import ServicioForm
 
 ## SSH
 from .ssh_utils import setup_ssh_key
@@ -28,6 +29,8 @@ from .hashes import password_auth, base64_to_binary
 from .models import ContadorIntentos
 from .models import OTPTemp
 from .models import Servidor
+
+
 
 # FUNCTIONS
 
@@ -131,7 +134,11 @@ def dashboard_view(request):
 
 
 ## AddServer
+
 def agregarServidor(request):
+    if not request.session.get('loggeado'):
+        return redirect('/login')
+    
     messageSuccess = None
     if request.method == 'POST':
         form = ServidorForm(request.POST)
@@ -175,3 +182,164 @@ def agregarServidor(request):
     'messageSuccess': messageSuccess
 })
 
+#Servicios
+
+def levantar_servicio(request):
+    if not request.session.get('loggeado'):
+        return redirect('/login')
+    
+    mensaje = None
+    error = None
+    
+    
+    if request.method == 'POST':
+        form = ServicioForm(request.POST)
+        if form.is_valid():
+            servicio = form.cleaned_data['servicio']
+            servidor = form.cleaned_data['servidor']
+            
+            try:
+                ssh = paramiko.SSHClient()
+                ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+                ssh.connect(
+                    servidor.ip,
+                    port=servidor.puerto,
+                    username=servidor.usuario,
+                    key_filename='/home/nimbuscore/.ssh/id_rsa',
+                    timeout=15
+                )
+                comando = f'sudo systemctl start {servicio}'
+                ssh.exec_command(comando)
+                
+                verificar_estado = f'sudo systemctl is-active {servicio}'
+                stdin, stdout, stderr = ssh.exec_command(verificar_estado)
+                estado = stdout.read().decode().strip()
+                errores = stderr.read().decode().strip()
+               
+
+                if estado == 'active':
+                    mensaje = f"✅ Servicio '{servicio}' iniciado correctamente en {servidor.nombre}. estado actual: {estado}."
+                else:
+                    mensaje = f" El servicio '{servicio}' Se inicio. Estado anterior : {estado}."
+                    
+                ssh.close()
+            except Exception as e:
+                error = f'Error al conectar al servidor o ejecutar comando: {str(e)}'
+    else:
+        form = ServicioForm()
+        
+    return render(request, 'levantar_servicio.html', {'form': form, 'mensaje': mensaje, 'error': error})
+
+##Administrar Servicios
+
+def administrar_servicios(request):
+    if not request.session.get('loggeado'):
+        return redirect('/login')
+    
+    servicios = []
+    error = None
+    mensaje = None
+    servidor_seleccionado = None
+
+    if request.method == 'POST':
+        servidor_id = request.POST.get('servidor')
+        accion = request.POST.get('accion')  # Puede ser None
+        servicio = request.POST.get('servicio')  # Puede ser None
+        servidor = Servidor.objects.get(id=servidor_id)
+        servidor_seleccionado = servidor
+
+        try:
+            ssh = paramiko.SSHClient()
+            ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+            ssh.connect(
+                servidor.ip,
+                port=servidor.puerto,
+                username=servidor.usuario,
+                key_filename='/home/nimbuscore/.ssh/id_rsa',
+                timeout=15
+            )
+
+            # Si hay acción (stop, restart)
+            if accion and servicio:
+                comando = f'sudo systemctl {accion} {servicio}'
+                stdin, stdout, stderr = ssh.exec_command(comando)
+                salida = stdout.read().decode()
+                errores = stderr.read().decode()
+                if errores:
+                    error = errores
+                else:
+                    mensaje = f"Servicio {servicio} {accion} ejecutado correctamente."
+
+            # Siempre listar los servicios después
+            stdin, stdout, stderr = ssh.exec_command(
+                'systemctl list-units --type=service --state=running --no-pager'
+            )
+            salida = stdout.read().decode()
+            errores = stderr.read().decode()
+
+            if errores:
+                error = errores
+            else:
+                for linea in salida.splitlines()[1:]:  # Ignorar encabezado
+                    partes = linea.split()
+                    if len(partes) >= 5:
+                        nombre = partes[0]
+                        descripcion = ' '.join(partes[4:])
+                        servicios.append({
+                            'nombre': nombre,
+                            'descripcion': descripcion
+                        })
+
+            ssh.close()
+        except Exception as e:
+            error = f"Error al conectar al servidor o ejecutar el comando: {str(e)}"
+
+    servidores = Servidor.objects.all()
+    return render(request, 'administrar_servicios.html', {
+        'servicios': servicios,
+        'servidores': servidores,
+        'mensaje': mensaje,
+        'error': error,
+        'servidor_seleccionado': servidor_seleccionado
+    })
+    
+
+def monitor_servicios_view(request):
+    # Solo se renderiza el template, que cargará datos vía AJAX
+    return render(request, 'monitor_servicios.html')
+
+
+
+def estado_servicios_api(request):
+    # Retorna JSON con estado de servicios en cada servidor (para consumir con JS)
+    respuesta = []
+    servidores = Servidor.objects.all()
+
+    for servidor in servidores:
+        try:
+            ssh = paramiko.SSHClient()
+            ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+            ssh.connect(servidor.ip, port=servidor.puerto, username=servidor.usuario, key_filename='/home/nimbuscore/.ssh/id_rsa', timeout=10)
+            stdin, stdout, stderr = ssh.exec_command('systemctl list-units --type=service --state=running --no-pager')
+            salida = stdout.read().decode()
+            ssh.close()
+
+            servicios_activos = []
+            for linea in salida.splitlines()[1:]:
+                partes = linea.split()
+                if len(partes) >= 1:
+                    servicios_activos.append(partes[0])
+
+            respuesta.append({
+                'servidor': servidor.nombre,
+                'ip': servidor.ip,
+                'servicios_activos': servicios_activos
+            })
+        except Exception as e:
+            respuesta.append({
+                'servidor': servidor.nombre,
+                'ip': servidor.ip,
+                'error': str(e)
+            })
+
+    return JsonResponse(respuesta, safe=False)

@@ -10,5 +10,9 @@ urlpatterns = [
     path('opcion3/', views.dashboard_view, name='opcion3'),
     path('opcion4/', views.dashboard_view, name='opcion4'),
     path('otp/', views.otp_view, name='otp'),
-    path('agregarservidor/', views.agregarServidor, name='agregarservidor'),    
+    path('agregarservidor/', views.agregarServidor, name='agregarservidor'),
+    path('levantarServicio/', views.levantar_servicio, name='levantarServicio'),
+    path('administrar_servicios/', views.administrar_servicios, name='administrar_servicios'),
+    path('monitor/', views.monitor_servicios_view, name='monitor_servicios'),
+    path('api/estado_servicios/', views.estado_servicios_api, name='estado_servicios_api'),
 ]
