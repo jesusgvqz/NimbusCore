@@ -4,14 +4,32 @@
 {% block title %}Monitorización de Servicios{% endblock %}
 
 {% block content %}
-<h2 class="mb-4 text-center">Monitorización de Servicios</h2>
+<div class="container py-5">
+  <div class="card shadow-lg border-0" style="border-radius: 15px;">
+    <div class="card-header bg-primary text-white">
+      <h2 class="text-center mb-0 py-3 fw-bold">
+        <i class="bi bi-graph-up me-2"></i>Monitorización de Servicios
+      </h2>
+    </div>
+    
+    <div class="card-body p-4">
+      <div id="panel-servicios" class="text-center py-5">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Cargando...</span>
+        </div>
+        <p class="text-muted mt-3">Obteniendo estados de los servicios...</p>
+      </div>
 
-<div id="panel-servicios" class="container">
-  <p>Cargando estados...</p>
-</div>
-
-<div class="text-end mb-3 mt-3">
-  <a href="{% url 'dashboard' %}" class="btn btn-outline-primary">Regresar al Dashboard</a>
+      <div class="d-flex justify-content-between mt-4">
+        <button id="btn-actualizar" class="btn btn-outline-secondary">
+          <i class="bi bi-arrow-clockwise me-2"></i>Actualizar
+        </button>
+        <a href="{% url 'dashboard' %}" class="btn btn-primary">
+          <i class="bi bi-arrow-left me-2"></i>Regresar al Dashboard
+        </a>
+      </div>
+    </div>
+  </div>
 </div>
 
 <script src="{% static 'js/estado_servicios.js' %}"></script>
