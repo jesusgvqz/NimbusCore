@@ -1,12 +1,13 @@
 # IMPORTS
 ## GENERAL
 from math import e
+from sys import stderr, stdin, stdout
 import requests
 from datetime import timezone
 from django.http import JsonResponse
 ## DJANGO
 from django.conf import settings
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login
 from django.utils.timezone import now
 
@@ -195,7 +196,7 @@ def levantar_servicio(request):
     if request.method == 'POST':
         form = ServicioForm(request.POST)
         if form.is_valid():
-            servicio = form.cleaned_data['servicio']
+            nombre_paquete = form.cleaned_data['servicio']
             servidor = form.cleaned_data['servidor']
             
             try:
@@ -206,25 +207,22 @@ def levantar_servicio(request):
                     port=servidor.puerto,
                     username=servidor.usuario,
                     key_filename='/home/nimbuscore/.ssh/id_rsa',
-                    timeout=15
+                    timeout=60
                 )
-                comando = f'sudo systemctl start {servicio}'
-                ssh.exec_command(comando)
-                
-                verificar_estado = f'sudo systemctl is-active {servicio}'
-                stdin, stdout, stderr = ssh.exec_command(verificar_estado)
-                estado = stdout.read().decode().strip()
-                errores = stderr.read().decode().strip()
-               
+                comando = f'sudo apt install -y {nombre_paquete}'
+                stdin, stdout, stderr = ssh.exec_command(comando)
+                salida = stdout.read().decode()
+                errores = stderr.read().decode()
 
-                if estado == 'active':
-                    mensaje = f"✅ Servicio '{servicio}' iniciado correctamente en {servidor.nombre}. estado actual: {estado}."
+                if errores:
+                    error = f" Error al instalar el paquete: {errores}"
                 else:
-                    mensaje = f" El servicio '{servicio}' Se inicio. Estado anterior : {estado}."
-                    
+                    mensaje = f"Paquete {nombre_paquete} instalado correctamente en {servidor.nombre}.\n\nSalida: \n{salida}" 
+                
+                 
                 ssh.close()
             except Exception as e:
-                error = f'Error al conectar al servidor o ejecutar comando: {str(e)}'
+                error = f'Error al conectar al servidor o instalacion: {str(e)}'
     else:
         form = ServicioForm()
         
@@ -243,8 +241,8 @@ def administrar_servicios(request):
 
     if request.method == 'POST':
         servidor_id = request.POST.get('servidor')
-        accion = request.POST.get('accion')  # Puede ser None
-        servicio = request.POST.get('servicio')  # Puede ser None
+        accion = request.POST.get('accion')  
+        servicio = request.POST.get('servicio')  
         servidor = Servidor.objects.get(id=servidor_id)
         servidor_seleccionado = servidor
 
@@ -259,36 +257,39 @@ def administrar_servicios(request):
                 timeout=15
             )
 
-            # Si hay acción (stop, restart)
+            # Ejecutar accion
             if accion and servicio:
                 comando = f'sudo systemctl {accion} {servicio}'
                 stdin, stdout, stderr = ssh.exec_command(comando)
                 salida = stdout.read().decode()
                 errores = stderr.read().decode()
-                if errores:
+                if errores and not errores.isspace():
                     error = errores
                 else:
-                    mensaje = f"Servicio {servicio} {accion} ejecutado correctamente."
+                    mensaje = f"Servicio {servicio} se ha {accion} correctamente."
 
-            # Siempre listar los servicios después
+            # Mostrar todos los servicios lo tqm profe limon, un beso si me pone 10
             stdin, stdout, stderr = ssh.exec_command(
-                'systemctl list-units --type=service --state=running --no-pager'
+                'systemctl list-units --type=service --all --no-pager --no-legend'
             )
             salida = stdout.read().decode()
             errores = stderr.read().decode()
 
-            if errores:
+            if errores and not errores.isspace():
                 error = errores
             else:
-                for linea in salida.splitlines()[1:]:  # Ignorar encabezado
-                    partes = linea.split()
+                for linea in salida.splitlines(): 
+                    partes = linea.split(None, 4)
                     if len(partes) >= 5:
                         nombre = partes[0]
-                        descripcion = ' '.join(partes[4:])
-                        servicios.append({
-                            'nombre': nombre,
-                            'descripcion': descripcion
-                        })
+                        estado = partes[3]
+                        descripcion = partes[4]
+                        if estado in ['running', 'exited', 'dead']:
+                            servicios.append({
+                                'nombre': nombre,
+                                'estado': estado,
+                                'descripcion': descripcion
+                            })
 
             ssh.close()
         except Exception as e:
@@ -343,3 +344,16 @@ def estado_servicios_api(request):
             })
 
     return JsonResponse(respuesta, safe=False)
+
+def editar_servidores(request):
+    if not request.session.get('loggeado'):
+        return redirect('/login')
+
+    servidores = Servidor.objects.all()
+    if request.method == 'POST':
+        servidor_id = request.POST.get('servidor_id')
+        servidor = get_object_or_404(Servidor, id=servidor_id)
+        servidor.delete()
+        return redirect('editar_servidores')
+
+    return render(request, 'editar_servidores.html', {'servidores': servidores})

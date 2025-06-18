@@ -1,6 +1,7 @@
 from django.urls import path
 from . import views
 
+
 urlpatterns = [
     path("login/", views.login_view, name="login"),
     path('logout/', views.logout_view, name='logout'),
@@ -15,4 +16,5 @@ urlpatterns = [
     path('administrar_servicios/', views.administrar_servicios, name='administrar_servicios'),
     path('monitor/', views.monitor_servicios_view, name='monitor_servicios'),
     path('api/estado_servicios/', views.estado_servicios_api, name='estado_servicios_api'),
+    path('editar-servidores/', views.editar_servidores, name='editar_servidores'),
 ]

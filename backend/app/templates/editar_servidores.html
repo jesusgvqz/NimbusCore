@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2 class="text-center mb-4">Administrar Servidores</h2>
+
+<table class="table table-bordered text-center">
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>IP</th>
+            <th>Puerto</th>
+            <th>Usuario</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for servidor in servidores %}
+        <tr>
+            <td>{{ servidor.nombre }}</td>
+            <td>{{ servidor.ip }}</td>
+            <td>{{ servidor.puerto }}</td>
+            <td>{{ servidor.usuario }}</td>
+            <td>
+                <form method="post" style="display:inline;">
+                    {% csrf_token %}
+                    <input type="hidden" name="servidor_id" value="{{ servidor.id }}">
+                    <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
+                </form>
+            </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="5">No hay servidores registrados.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<a href="/dashboard" class="btn btn-secondary">Volver al Dashboard</a>
+{% endblock %}
